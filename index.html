@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <title>Dear Bee 🐝</title>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background: #1a1a1a;
+            color: #ffcc00;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 { 
+            color: #ffcc00; 
+            font-size: 2.5em; 
+            margin-bottom: 10px;
+        }
+        .subtitle { 
+            color: #aaa; 
+            margin-bottom: 30px; 
+            font-size: 1.2em;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .card {
+            background: #2a2a2a;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(255, 204, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .card p {
+            padding: 15px;
+            margin: 0;
+            color: #ffcc00;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐝 Dear Bee 🐝</h1>
+    <p class="subtitle">a piece of bee's life</p>
+    
+    <div class="gallery">
+        <div class="card">
+            <img src="images/photo1.jpg" alt="عکس اول">
+            <p>توضیح عکس اول</p>
+        </div>
+        
+        <div class="card">
+            <img src="images/photo2.jpg" alt="عکس دوم">
+            <p>توضیح عکس دوم</p>
+        </div>
+        
+        <div class="card">
+            <img src="images/photo3.jpg" alt="عکس سوم">
+            <p>توضیح عکس سوم</p>
+        </div>
+        
+        <!-- اینجا کارت‌های جدید اضافه کن -->
+    </div>
+</body>
+</html>
