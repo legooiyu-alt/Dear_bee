@@ -17,18 +17,18 @@
 
         body {
             font-family: 'Courier New', monospace;
-            background: #0a0a0a;
+            background: #050505;
             color: #00ff41;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 20px;
+            padding: 40px 20px 80px 20px;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* افکت ماتریکس */
+        /* شبکه‌ی متحرک پس‌زمینه */
         body::before {
             content: '';
             position: fixed;
@@ -37,16 +37,35 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(0, 255, 65, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 65, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
+                linear-gradient(rgba(0, 255, 65, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
             z-index: -1;
-            animation: gridMove 20s linear infinite;
+            animation: gridMove 25s linear infinite;
         }
 
         @keyframes gridMove {
             0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 30px); }
+            100% { transform: translate(40px, 40px); }
+        }
+
+        /* اسکن‌لاین */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 999;
         }
 
         h1 {
@@ -55,32 +74,50 @@
             text-shadow: 
                 0 0 10px #00ff41,
                 0 0 20px #00ff41,
-                0 0 40px #00ff41;
-            letter-spacing: 3px;
+                0 0 40px #00ff41,
+                0 0 80px #00ff41;
+            letter-spacing: 4px;
             margin-bottom: 10px;
             text-align: center;
-            animation: flicker 3s infinite alternate;
+            animation: flicker 4s infinite alternate;
         }
 
         @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            95% { opacity: 1; }
-            96% { opacity: 0.8; }
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 40px #00ff41; }
+            92% { opacity: 1; }
+            93% { opacity: 0.7; text-shadow: none; }
+            94% { opacity: 1; }
+            96% { opacity: 0.9; }
             97% { opacity: 1; }
-            98% { opacity: 0.9; }
-            99% { opacity: 1; }
         }
 
         .subtitle {
             color: #00aa2a;
-            font-size: 1em;
-            letter-spacing: 5px;
+            font-size: 0.95em;
+            letter-spacing: 6px;
             text-transform: uppercase;
             margin-bottom: 40px;
             border-bottom: 1px solid #00ff41;
             padding-bottom: 10px;
             text-align: center;
             max-width: 400px;
+            text-shadow: 0 0 5px #00ff41;
+        }
+
+        .subtitle::before {
+            content: '> ';
+            color: #00ff41;
+        }
+
+        .subtitle::after {
+            content: ' _';
+            color: #00ff41;
+            animation: cursorBlink 1s infinite;
+        }
+
+        @keyframes cursorBlink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         .gallery {
@@ -89,16 +126,17 @@
             gap: 25px;
             max-width: 1000px;
             width: 100%;
+            margin-bottom: 60px;
         }
 
         .card {
-            background: rgba(10, 10, 10, 0.8);
+            background: rgba(5, 5, 5, 0.9);
             border: 1px solid #00ff41;
-            border-radius: 5px;
+            border-radius: 3px;
             overflow: hidden;
             box-shadow: 
                 0 0 10px rgba(0, 255, 65, 0.3),
-                inset 0 0 20px rgba(0, 255, 65, 0.1);
+                inset 0 0 20px rgba(0, 255, 65, 0.05);
             transition: all 0.4s;
             position: relative;
         }
@@ -111,7 +149,8 @@
             width: 100%;
             height: 2px;
             background: linear-gradient(90deg, transparent, #00ff41, transparent);
-            animation: scanline 3s linear infinite;
+            animation: scanline 4s linear infinite;
+            z-index: 10;
         }
 
         @keyframes scanline {
@@ -124,34 +163,152 @@
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 
-                0 0 20px rgba(0, 255, 65, 0.6),
-                0 0 40px rgba(0, 255, 65, 0.3),
-                inset 0 0 30px rgba(0, 255, 65, 0.2);
-            border-color: #00ff41;
+                0 0 25px rgba(0, 255, 65, 0.7),
+                0 0 50px rgba(0, 255, 65, 0.3),
+                inset 0 0 30px rgba(0, 255, 65, 0.15);
         }
 
+        /* ✅ عکس بدون هیچ فیلتر رنگی */
         .card img {
             width: 100%;
             height: auto;
             max-height: 400px;
             object-fit: contain;
-            filter: hue-rotate(90deg) contrast(1.1);
-            transition: filter 0.4s;
+            display: block;
+            transition: transform 0.4s;
         }
 
-  .card:hover img {
-    filter: contrast(1.2) brightness(1.1);
-}
+        .card:hover img {
+            transform: scale(1.02);
+        }
 
         .card p {
             padding: 15px;
             margin: 0;
             color: #00ff41;
-            font-size: 0.95em;
-            letter-spacing: 1px;
+            font-size: 0.9em;
+            letter-spacing: 1.5px;
             text-align: center;
             background: rgba(0, 255, 65, 0.05);
             border-top: 1px solid rgba(0, 255, 65, 0.3);
+            text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+        }
+
+        .card p::before {
+            content: '[ ';
+            color: #00ff41;
+        }
+
+        .card p::after {
+            content: ' ]';
+            color: #00ff41;
+        }
+
+        /* ===== بخش بازی ===== */
+        .game-section {
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(5, 5, 5, 0.95);
+            border: 1px solid #ff0041;
+            border-radius: 3px;
+            box-shadow: 
+                0 0 20px rgba(255, 0, 65, 0.4),
+                inset 0 0 30px rgba(255, 0, 65, 0.1);
+            position: relative;
+        }
+
+        .game-section::before {
+            content: 'TOP SECRET';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #ff0041;
+            color: #0a0a0a;
+            padding: 3px 12px;
+            font-size: 0.7em;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+
+        .game-title {
+            color: #ff0041;
+            text-align: center;
+            font-size: 1.4em;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px #ff0041, 0 0 20px #ff0041;
+            margin-bottom: 20px;
+            animation: flickerRed 3s infinite alternate;
+        }
+
+        @keyframes flickerRed {
+            0%, 100% { opacity: 1; text-shadow: 0 0 10px #ff0041, 0 0 20px #ff0041; }
+            90% { opacity: 1; }
+            91% { opacity: 0.6; text-shadow: none; }
+            92% { opacity: 1; }
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #00ff41;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            padding: 12px;
+            border: 1px solid rgba(0, 255, 65, 0.3);
+            background: rgba(0, 255, 65, 0.03);
+            letter-spacing: 1px;
+        }
+
+        .game-info span {
+            color: #ff0041;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff0041;
+        }
+
+        #gameCanvas {
+            display: block;
+            margin: 0 auto;
+            background: #f5f5dc;
+            border-radius: 3px;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='16' fill='%23ffffff' stroke='%2300ff41' stroke-width='2'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%23ff0041' stroke-width='1' stroke-dasharray='3,3'/%3E%3C/svg%3E") 20 20, crosshair;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 65, 0.2),
+                inset 0 0 20px rgba(0,0,0,0.2);
+            touch-action: none;
+        }
+
+        .game-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .game-buttons button {
+            background: transparent;
+            color: #00ff41;
+            border: 1px solid #00ff41;
+            padding: 12px 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+
+        .game-buttons button:hover:not(:disabled) {
+            background: #00ff41;
+            color: #050505;
+            box-shadow: 0 0 25px #00ff41, 0 0 50px rgba(0, 255, 65, 0.5);
+            text-shadow: none;
+        }
+
+        .game-buttons button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* نوار وضعیت پایین */
@@ -161,7 +318,7 @@
             left: 0;
             width: 100%;
             padding: 8px 20px;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.98);
             border-top: 1px solid #00ff41;
             color: #00ff41;
             font-size: 0.75em;
@@ -169,15 +326,24 @@
             display: flex;
             justify-content: space-between;
             z-index: 100;
+            text-shadow: 0 0 5px #00ff41;
         }
 
         .status-bar span {
-            animation: blink 1.5s infinite;
+            animation: blink 2s infinite;
         }
 
         @keyframes blink {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.4; }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            .game-section { padding: 20px 15px; }
+            #gameCanvas { width: 100%; height: auto; }
+            .game-info { font-size: 0.75em; flex-wrap: wrap; gap: 8px; }
+            .game-info > div { flex: 1 1 30%; text-align: center; }
         }
     </style>
 </head>
@@ -192,6 +358,20 @@
         </div>
     </div>
 
+    <!-- بازی -->
+    <div class="game-section">
+        <h2 class="game-title">🩸 CLEAN THE BLOOD 🩸</h2>
+        <div class="game-info">
+            <div>مرحله: <span id="level">1</span></div>
+            <div>امتیاز: <span id="score">0</span></div>
+            <div>زمان: <span id="timer">30</span>s</div>
+        </div>
+        <canvas id="gameCanvas" width="600" height="350"></canvas>
+        <div class="game-buttons">
+            <button id="startBtn">شروع بازی</button>
+        </div>
+    </div>
+
     <div class="status-bar">
         <span>● SYSTEM ACTIVE</span>
         <span>Dear_Bee v1.0</span>
@@ -199,6 +379,7 @@
     </div>
 
     <script>
+        // ساعت
         function updateClock() {
             const now = new Date();
             const time = now.toLocaleTimeString('en-GB');
@@ -206,6 +387,268 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
+
+        // ===== بازی =====
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const startBtn = document.getElementById('startBtn');
+        const levelEl = document.getElementById('level');
+        const scoreEl = document.getElementById('score');
+        const timerEl = document.getElementById('timer');
+
+        let bloodDrops = [];
+        let isPlaying = false;
+        let score = 0;
+        let timeLeft = 30;
+        let level = 1;
+        let gameTimer = null;
+        let isDragging = false;
+        let lastX = 0;
+        let lastY = 0;
+        let wipeMarks = [];
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function createBloodDrops(count) {
+            bloodDrops = [];
+            for (let i = 0; i < count; i++) {
+                bloodDrops.push({
+                    x: randomInt(40, canvas.width - 40),
+                    y: randomInt(40, canvas.height - 40),
+                    radius: randomInt(14, 26),
+                    cleaned: false,
+                    opacity: 1
+                });
+            }
+        }
+
+        function drawBlood(drop) {
+            if (drop.cleaned) return;
+
+            // قطره‌ی اصلی
+            const gradient = ctx.createRadialGradient(
+                drop.x, drop.y, 0,
+                drop.x, drop.y, drop.radius
+            );
+            gradient.addColorStop(0, `rgba(220, 0, 25, ${drop.opacity})`);
+            gradient.addColorStop(0.5, `rgba(160, 0, 15, ${drop.opacity})`);
+            gradient.addColorStop(1, `rgba(80, 0, 5, ${drop.opacity * 0.6})`);
+
+            ctx.beginPath();
+            ctx.arc(drop.x, drop.y, drop.radius, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+
+            // قطره‌های کوچیک اطراف (پاشیدگی)
+            const splatters = [
+                { x: -0.9, y: 0.6, r: 0.35 },
+                { x: 0.8, y: -0.7, r: 0.28 },
+                { x: 0.6, y: 0.9, r: 0.22 },
+                { x: -0.7, y: -0.8, r: 0.18 },
+                { x: 1.1, y: 0.2, r: 0.15 }
+            ];
+
+            splatters.forEach(s => {
+                ctx.beginPath();
+                ctx.arc(
+                    drop.x + drop.radius * s.x,
+                    drop.y + drop.radius * s.y,
+                    drop.radius * s.r,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fillStyle = `rgba(160, 0, 15, ${drop.opacity * 0.7})`;
+                ctx.fill();
+            });
+        }
+
+        function drawScene() {
+            // پس‌زمینه‌ی پارچه‌ای
+            ctx.fillStyle = '#f5f5dc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // بافت پارچه
+            ctx.strokeStyle = 'rgba(200, 200, 180, 0.25)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 6) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < canvas.height; i += 6) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+
+            // جای دستمال‌ها (سفید کم‌رنگ)
+            wipeMarks.forEach(mark => {
+                ctx.beginPath();
+                ctx.arc(mark.x, mark.y, 20, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.fill();
+            });
+
+            // قطره‌های خون
+            bloodDrops.forEach(drop => drawBlood(drop));
+        }
+
+        function cleanBloodAt(x, y) {
+            bloodDrops.forEach(drop => {
+                if (drop.cleaned) return;
+                const dist = Math.sqrt((x - drop.x) ** 2 + (y - drop.y) ** 2);
+                if (dist < drop.radius + 20) {
+                    drop.cleaned = true;
+                    score += 10;
+                    scoreEl.textContent = score;
+                }
+            });
+        }
+
+        function getMousePos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function handleStart(e) {
+            if (!isPlaying) return;
+            e.preventDefault();
+            isDragging = true;
+            const pos = getMousePos(e);
+            lastX = pos.x;
+            lastY = pos.y;
+            wipeMarks.push({ x: pos.x, y: pos.y, time: Date.now() });
+            cleanBloodAt(pos.x, pos.y);
+            drawScene();
+        }
+
+        function handleMove(e) {
+            if (!isPlaying || !isDragging) return;
+            e.preventDefault();
+            const pos = getMousePos(e);
+
+            // پاک کردن بین دو نقطه (خط)
+            const steps = 8;
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const x = lastX + (pos.x - lastX) * t;
+                const y = lastY + (pos.y - lastY) * t;
+                cleanBloodAt(x, y);
+                wipeMarks.push({ x: x, y: y, time: Date.now() });
+            }
+
+            lastX = pos.x;
+            lastY = pos.y;
+
+            // حذف ردهای قدیمی (بعد از ۱.۵ ثانیه)
+            const now = Date.now();
+            wipeMarks = wipeMarks.filter(m => now - m.time < 1500);
+
+            drawScene();
+        }
+
+        function handleEnd() {
+            isDragging = false;
+        }
+
+        canvas.addEventListener('mousedown', handleStart);
+        canvas.addEventListener('mousemove', handleMove);
+        canvas.addEventListener('mouseup', handleEnd);
+        canvas.addEventListener('mouseleave', handleEnd);
+
+        canvas.addEventListener('touchstart', handleStart, { passive: false });
+        canvas.addEventListener('touchmove', handleMove, { passive: false });
+        canvas.addEventListener('touchend', handleEnd);
+
+        function startGame() {
+            isPlaying = true;
+            score = 0;
+            timeLeft = 30;
+            level = 1;
+            wipeMarks = [];
+            scoreEl.textContent = score;
+            timerEl.textContent = timeLeft;
+            levelEl.textContent = level;
+            timerEl.style.color = '#ff0041';
+
+            createBloodDrops(5);
+            drawScene();
+
+            startBtn.textContent = 'در حال بازی...';
+            startBtn.disabled = true;
+
+            if (gameTimer) clearInterval(gameTimer);
+
+            gameTimer = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = timeLeft;
+
+                // اضافه کردن قطره‌ی جدید هر ۵ ثانیه
+                if (timeLeft % 5 === 0 && timeLeft > 0) {
+                    bloodDrops.push({
+                        x: randomInt(40, canvas.width - 40),
+                        y: randomInt(40, canvas.height - 40),
+                        radius: randomInt(14, 26),
+                        cleaned: false,
+                        opacity: 1
+                    });
+                }
+
+                // افکت چشمک تایمر در ۱۰ ثانیه‌ی آخر
+                if (timeLeft <= 10) {
+                    timerEl.style.color = timeLeft % 2 === 0 ? '#ff0041' : '#00ff41';
+                }
+
+                drawScene();
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function endGame() {
+            isPlaying = false;
+            clearInterval(gameTimer);
+            startBtn.textContent = 'بازی دوباره';
+            startBtn.disabled = false;
+
+            // نمایش امتیاز نهایی
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.9)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#ff0041';
+            ctx.font = 'bold 32px Courier New';
+            ctx.textAlign = 'center';
+            ctx.shadowColor = '#ff0041';
+            ctx.shadowBlur = 20;
+            ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 30);
+
+            ctx.fillStyle = '#00ff41';
+            ctx.font = 'bold 22px Courier New';
+            ctx.shadowColor = '#00ff41';
+            ctx.shadowBlur = 15;
+            ctx.fillText(`SCORE: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+
+            ctx.shadowBlur = 0;
+        }
+
+        startBtn.addEventListener('click', startGame);
+
+        // شروع اولیه
+        createBloodDrops(3);
+        drawScene();
     </script>
 </body>
 </html>
