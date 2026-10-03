@@ -28,7 +28,6 @@
             overflow-x: hidden;
         }
 
-        /* شبکه‌ی متحرک پس‌زمینه */
         body::before {
             content: '';
             position: fixed;
@@ -49,7 +48,6 @@
             100% { transform: translate(40px, 40px); }
         }
 
-        /* اسکن‌لاین */
         body::after {
             content: '';
             position: fixed;
@@ -168,7 +166,6 @@
                 inset 0 0 30px rgba(0, 255, 65, 0.15);
         }
 
-        /* ✅ عکس بدون هیچ فیلتر رنگی */
         .card img {
             width: 100%;
             height: auto;
@@ -268,15 +265,17 @@
             text-shadow: 0 0 5px #ff0041;
         }
 
+        /* ✅ صفحه‌ی بازی مشکی */
         #gameCanvas {
             display: block;
             margin: 0 auto;
-            background: #f5f5dc;
+            background: #0a0a0a;
             border-radius: 3px;
-            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='16' fill='%23ffffff' stroke='%2300ff41' stroke-width='2'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%23ff0041' stroke-width='1' stroke-dasharray='3,3'/%3E%3C/svg%3E") 20 20, crosshair;
+            border: 1px solid rgba(255, 0, 65, 0.3);
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='16' fill='rgba(255,255,255,0.9)' stroke='%23ff0041' stroke-width='2'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%2300ff41' stroke-width='1' stroke-dasharray='3,3'/%3E%3C/svg%3E") 20 20, crosshair;
             box-shadow: 
-                0 0 20px rgba(0, 255, 65, 0.2),
-                inset 0 0 20px rgba(0,0,0,0.2);
+                0 0 25px rgba(255, 0, 65, 0.3),
+                inset 0 0 40px rgba(0, 0, 0, 0.8);
             touch-action: none;
         }
 
@@ -287,8 +286,8 @@
 
         .game-buttons button {
             background: transparent;
-            color: #00ff41;
-            border: 1px solid #00ff41;
+            color: #ff0041;
+            border: 1px solid #ff0041;
             padding: 12px 30px;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
@@ -300,10 +299,9 @@
         }
 
         .game-buttons button:hover:not(:disabled) {
-            background: #00ff41;
+            background: #ff0041;
             color: #050505;
-            box-shadow: 0 0 25px #00ff41, 0 0 50px rgba(0, 255, 65, 0.5);
-            text-shadow: none;
+            box-shadow: 0 0 25px #ff0041, 0 0 50px rgba(255, 0, 65, 0.5);
         }
 
         .game-buttons button:disabled {
@@ -311,7 +309,6 @@
             cursor: not-allowed;
         }
 
-        /* نوار وضعیت پایین */
         .status-bar {
             position: fixed;
             bottom: 0;
@@ -358,7 +355,6 @@
         </div>
     </div>
 
-    <!-- بازی -->
     <div class="game-section">
         <h2 class="game-title">🩸 CLEAN THE BLOOD 🩸</h2>
         <div class="game-info">
@@ -379,7 +375,6 @@
     </div>
 
     <script>
-        // ساعت
         function updateClock() {
             const now = new Date();
             const time = now.toLocaleTimeString('en-GB');
@@ -388,7 +383,6 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // ===== بازی =====
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const startBtn = document.getElementById('startBtn');
@@ -427,21 +421,44 @@
         function drawBlood(drop) {
             if (drop.cleaned) return;
 
+            // درخشش پشت قطره
+            ctx.beginPath();
+            ctx.arc(drop.x, drop.y, drop.radius * 1.8, 0, Math.PI * 2);
+            const glow = ctx.createRadialGradient(
+                drop.x, drop.y, 0,
+                drop.x, drop.y, drop.radius * 1.8
+            );
+            glow.addColorStop(0, `rgba(255, 0, 65, ${drop.opacity * 0.3})`);
+            glow.addColorStop(1, 'rgba(255, 0, 65, 0)');
+            ctx.fillStyle = glow;
+            ctx.fill();
+
             // قطره‌ی اصلی
             const gradient = ctx.createRadialGradient(
                 drop.x, drop.y, 0,
                 drop.x, drop.y, drop.radius
             );
-            gradient.addColorStop(0, `rgba(220, 0, 25, ${drop.opacity})`);
-            gradient.addColorStop(0.5, `rgba(160, 0, 15, ${drop.opacity})`);
-            gradient.addColorStop(1, `rgba(80, 0, 5, ${drop.opacity * 0.6})`);
+            gradient.addColorStop(0, `rgba(255, 30, 70, ${drop.opacity})`);
+            gradient.addColorStop(0.5, `rgba(200, 0, 40, ${drop.opacity})`);
+            gradient.addColorStop(1, `rgba(120, 0, 20, ${drop.opacity * 0.7})`);
 
             ctx.beginPath();
             ctx.arc(drop.x, drop.y, drop.radius, 0, Math.PI * 2);
             ctx.fillStyle = gradient;
             ctx.fill();
 
-            // قطره‌های کوچیک اطراف (پاشیدگی)
+            // هایلایت روشن
+            ctx.beginPath();
+            ctx.arc(
+                drop.x - drop.radius * 0.3,
+                drop.y - drop.radius * 0.3,
+                drop.radius * 0.3,
+                0, Math.PI * 2
+            );
+            ctx.fillStyle = `rgba(255, 100, 130, ${drop.opacity * 0.5})`;
+            ctx.fill();
+
+            // پاشیدگی‌ها
             const splatters = [
                 { x: -0.9, y: 0.6, r: 0.35 },
                 { x: 0.8, y: -0.7, r: 0.28 },
@@ -459,37 +476,43 @@
                     0,
                     Math.PI * 2
                 );
-                ctx.fillStyle = `rgba(160, 0, 15, ${drop.opacity * 0.7})`;
+                ctx.fillStyle = `rgba(200, 0, 40, ${drop.opacity * 0.7})`;
                 ctx.fill();
             });
         }
 
         function drawScene() {
-            // پس‌زمینه‌ی پارچه‌ای
-            ctx.fillStyle = '#f5f5dc';
+            // ✅ پس‌زمینه‌ی مشکی
+            ctx.fillStyle = '#0a0a0a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // بافت پارچه
-            ctx.strokeStyle = 'rgba(200, 200, 180, 0.25)';
+            // ✅ بافت شبکه‌ی سبز کم‌رنگ
+            ctx.strokeStyle = 'rgba(0, 255, 65, 0.06)';
             ctx.lineWidth = 1;
-            for (let i = 0; i < canvas.width; i += 6) {
+            for (let i = 0; i < canvas.width; i += 20) {
                 ctx.beginPath();
                 ctx.moveTo(i, 0);
                 ctx.lineTo(i, canvas.height);
                 ctx.stroke();
             }
-            for (let i = 0; i < canvas.height; i += 6) {
+            for (let i = 0; i < canvas.height; i += 20) {
                 ctx.beginPath();
                 ctx.moveTo(0, i);
                 ctx.lineTo(canvas.width, i);
                 ctx.stroke();
             }
 
-            // جای دستمال‌ها (سفید کم‌رنگ)
+            // جای دستمال‌ها
             wipeMarks.forEach(mark => {
                 ctx.beginPath();
-                ctx.arc(mark.x, mark.y, 20, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.arc(mark.x, mark.y, 22, 0, Math.PI * 2);
+                const wipeGrad = ctx.createRadialGradient(
+                    mark.x, mark.y, 0,
+                    mark.x, mark.y, 22
+                );
+                wipeGrad.addColorStop(0, 'rgba(0, 255, 65, 0.15)');
+                wipeGrad.addColorStop(1, 'rgba(0, 255, 65, 0)');
+                ctx.fillStyle = wipeGrad;
                 ctx.fill();
             });
 
@@ -538,7 +561,6 @@
             e.preventDefault();
             const pos = getMousePos(e);
 
-            // پاک کردن بین دو نقطه (خط)
             const steps = 8;
             for (let i = 0; i <= steps; i++) {
                 const t = i / steps;
@@ -551,7 +573,6 @@
             lastX = pos.x;
             lastY = pos.y;
 
-            // حذف ردهای قدیمی (بعد از ۱.۵ ثانیه)
             const now = Date.now();
             wipeMarks = wipeMarks.filter(m => now - m.time < 1500);
 
@@ -594,7 +615,6 @@
                 timeLeft--;
                 timerEl.textContent = timeLeft;
 
-                // اضافه کردن قطره‌ی جدید هر ۵ ثانیه
                 if (timeLeft % 5 === 0 && timeLeft > 0) {
                     bloodDrops.push({
                         x: randomInt(40, canvas.width - 40),
@@ -605,7 +625,6 @@
                     });
                 }
 
-                // افکت چشمک تایمر در ۱۰ ثانیه‌ی آخر
                 if (timeLeft <= 10) {
                     timerEl.style.color = timeLeft % 2 === 0 ? '#ff0041' : '#00ff41';
                 }
@@ -624,8 +643,7 @@
             startBtn.textContent = 'بازی دوباره';
             startBtn.disabled = false;
 
-            // نمایش امتیاز نهایی
-            ctx.fillStyle = 'rgba(5, 5, 5, 0.9)';
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.95)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = '#ff0041';
@@ -646,7 +664,6 @@
 
         startBtn.addEventListener('click', startGame);
 
-        // شروع اولیه
         createBloodDrops(3);
         drawScene();
     </script>
